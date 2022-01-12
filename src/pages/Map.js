@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from 'react'
 import H from '@here/maps-api-for-javascript'
 import onResize from 'simple-element-resize-detector'
 
-
-
 const Map = () => {
   const [map, setMap] = useState(null)
 
@@ -30,11 +28,14 @@ const Map = () => {
       })
       // add zoom and pan
       new H.mapevents.Behavior(new H.mapevents.MapEvents(map))
+
+      // mapUseRef.current.setZoom()
     }
   }, [map])
-
+  console.log('map object', map)
   return (
     <>
+      <div>Hooks</div>
       <div
         style={{ position: 'relative', width: '100%', height: '300px' }}
         ref={mapUseRef}

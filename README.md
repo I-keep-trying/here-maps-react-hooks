@@ -1,6 +1,6 @@
 HERE maps api
 
-Working examples of React class components as well as hooks. 
+Working examples - the most basic and simple examples = of React class components as well as hooks. 
 
 `App.js` - React hooks
 `App1.js` - React class components 

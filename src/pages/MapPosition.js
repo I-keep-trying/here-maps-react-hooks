@@ -2,6 +2,7 @@ import React from 'react'
 
 const MapPosition = ({ lat, lng, zoom, onChange }) => {
   const handleOnChange = (ev) => {
+    console.log('onChange event', ev)
     onChange(ev.target.name, ev.target.value)
   }
 

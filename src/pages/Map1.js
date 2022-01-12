@@ -35,9 +35,15 @@ export default class Map extends React.Component {
         center: { lat: 0, lng: 0 },
         zoom: 2,
       })
+      // ------------------------------------------------------------
+      // apparently, event listener is unnecessary.
+      // the only difference: interacting with map by scrolling to zoom or click and drag
+      // to pan does not update values in inputs in 'MapPosition' component,
+      // but entering values into inputs *does* still work
 
-      // attach the listener
-      map.addEventListener('mapviewchange', this.handleMapViewChange)
+      // map.addEventListener('mapviewchange', this.handleMapViewChange)
+      // ------------------------------------------------------------
+
       // add the interactive behaviour to the map
       new H.mapevents.Behavior(new H.mapevents.MapEvents(map))
 
@@ -64,16 +70,19 @@ export default class Map extends React.Component {
     }
   }
 
+  /* 
+// removing event listener from line 44 if necessary
+
   componentWillUnmount() {
     if (this.map) {
       this.map.removeEventListener('mapviewchange', this.handleMapViewChange)
     }
-  }
+  } */
 
   render() {
     return (
       <>
-        <div>Map1</div>
+        <div>Class Components</div>
         <div
           //  style={{ width: '300px', height: '300px' }}
           style={{ position: 'relative', width: '100%', height: '300px' }}
