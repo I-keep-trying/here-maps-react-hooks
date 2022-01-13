@@ -11,7 +11,23 @@ export default class Map extends React.Component {
     this.map = null
   }
 
+  // keeps input values in sync with interactive map
   handleMapViewChange = (ev) => {
+    console.log('input event', ev)
+    /* 
+Ri
+a: false
+currentTarget: T {Nd: false, sb: Array(1), aa: pe, ao: T, jh: null, …}
+eventPhase: 2
+f: false
+modifiers: 98
+newValue: {lookAt: {…}}
+nl: true
+oldValue: {lookAt: {…}}
+target: T {Nd: false, sb: Array(1), aa: pe, ao: T, jh: null, …}
+type: "mapviewchange"
+[[Prototype]]: Ng
+ */
     const { onMapViewChange } = this.props
     if (ev.newValue && ev.newValue.lookAt) {
       const lookAt = ev.newValue.lookAt
@@ -32,7 +48,7 @@ export default class Map extends React.Component {
       const layers = platform.createDefaultLayers()
       const map = new H.Map(this.ref.current, layers.vector.normal.map, {
         pixelRatio: window.devicePixelRatio,
-        center: { lat: 0, lng: 0 },
+        center: { lat: 78, lng: 20 },
         zoom: 2,
       })
       // ------------------------------------------------------------
@@ -41,7 +57,7 @@ export default class Map extends React.Component {
       // to pan does not update values in inputs in 'MapPosition' component,
       // but entering values into inputs *does* still work
 
-      // map.addEventListener('mapviewchange', this.handleMapViewChange)
+      map.addEventListener('mapviewchange', this.handleMapViewChange)
       // ------------------------------------------------------------
 
       // add the interactive behaviour to the map
@@ -70,14 +86,13 @@ export default class Map extends React.Component {
     }
   }
 
-  /* 
-// removing event listener from line 44 if necessary
+  // removing event listener from line 45 if necessary
 
   componentWillUnmount() {
     if (this.map) {
       this.map.removeEventListener('mapviewchange', this.handleMapViewChange)
     }
-  } */
+  }
 
   render() {
     return (

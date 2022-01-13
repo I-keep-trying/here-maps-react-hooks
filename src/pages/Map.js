@@ -1,11 +1,46 @@
 import React, { useState, useRef, useEffect } from 'react'
 import H from '@here/maps-api-for-javascript'
 import onResize from 'simple-element-resize-detector'
+import MapPosition from './MapPosition'
 
 const Map = () => {
   const [map, setMap] = useState(null)
+  const [state, setState] = useState({
+    zoom: 0,
+    lat: 0,
+    lng: 0,
+  })
 
   const mapUseRef = useRef()
+
+  const onMapViewChange = (zoom, lat, lng) => {
+    setState({
+      ...state,
+      lat,
+      lng,
+      zoom,
+    })
+  }
+
+  const handleMapViewChange = (ev) => {
+    console.log('event', ev)
+    if (ev.newValue && ev.newValue.lookAt) {
+      const lookAt = ev.newValue.lookAt
+      // adjust precision
+      const lat = Math.trunc(lookAt.position.lat * 1e7) / 1e7
+      const lng = Math.trunc(lookAt.position.lng * 1e7) / 1e7
+      const zoom = Math.trunc(lookAt.zoom * 1e2) / 1e2
+      onMapViewChange(zoom, lat, lng)
+    }
+  }
+
+  const handleInputChange = (name, value) => {
+    setState({
+      ...state,
+      [name]: value,
+    })
+  }
+  console.log('mapUseRef', mapUseRef.current)
 
   useEffect(() => {
     if (!map) {
@@ -17,8 +52,8 @@ const Map = () => {
       setMap(
         new H.Map(mapUseRef.current, layers.vector.normal.map, {
           pixelRatio: window.devicePixelRatio,
-          center: { lat: 0, lng: 0 },
-          zoom: 0,
+          center: { lat: state.lat, lng: state.lng },
+          zoom: state.zoom,
         })
       )
     } else {
@@ -27,18 +62,42 @@ const Map = () => {
         map.getViewPort().resize()
       })
       // add zoom and pan
-      new H.mapevents.Behavior(new H.mapevents.MapEvents(map))
+      setTimeout(() => {
+        map.setZoom(state.zoom)
+        map.setCenter({ lat: state.lat, lng: state.lng })
+      }, 100)
+      //  map.addEventListener('mapviewchange', handleMapViewChange)
+    }
+  }, [map, state])
 
-      // mapUseRef.current.setZoom()
+  useEffect(() => {
+    if (map) {
+      new H.mapevents.Behavior(new H.mapevents.MapEvents(map))
     }
   }, [map])
-  console.log('map object', map)
+
+  useEffect(() => {
+    if (map && mapUseRef.current !== undefined) {
+      console.log('map? ')
+      map.addEventListener('mapviewchange', handleMapViewChange)
+      return () => {
+        map.removeEventListener('mapviewchange', handleMapViewChange)
+      }
+    }
+  }, [map, mapUseRef])
+
   return (
     <>
       <div>Hooks</div>
       <div
         style={{ position: 'relative', width: '100%', height: '300px' }}
         ref={mapUseRef}
+      />
+      <MapPosition
+        lat={state.lat}
+        lng={state.lng}
+        onChange={handleInputChange}
+        zoom={state.zoom}
       />
     </>
   )

@@ -13,6 +13,7 @@ export default class App extends React.Component {
   }
 
   // interactive feature; scroll to zoom, click & drag pan
+  // this keeps input values in sync when interacting directly with the map 
   handleMapViewChange = (zoom, lat, lng) => {
     this.setState({
       lat,
@@ -47,4 +48,3 @@ export default class App extends React.Component {
     )
   }
 }
-
