@@ -13,21 +13,6 @@ export default class Map extends React.Component {
 
   // keeps input values in sync with interactive map
   handleMapViewChange = (ev) => {
-    console.log('input event', ev)
-    /* 
-Ri
-a: false
-currentTarget: T {Nd: false, sb: Array(1), aa: pe, ao: T, jh: null, …}
-eventPhase: 2
-f: false
-modifiers: 98
-newValue: {lookAt: {…}}
-nl: true
-oldValue: {lookAt: {…}}
-target: T {Nd: false, sb: Array(1), aa: pe, ao: T, jh: null, …}
-type: "mapviewchange"
-[[Prototype]]: Ng
- */
     const { onMapViewChange } = this.props
     if (ev.newValue && ev.newValue.lookAt) {
       const lookAt = ev.newValue.lookAt
@@ -52,10 +37,9 @@ type: "mapviewchange"
         zoom: 2,
       })
       // ------------------------------------------------------------
-      // apparently, event listener is unnecessary.
-      // the only difference: interacting with map by scrolling to zoom or click and drag
-      // to pan does not update values in inputs in 'MapPosition' component,
-      // but entering values into inputs *does* still work
+      // event listener only necessary if using inputs, in order to
+      // keep input values in sync with interactive value changes
+      // i.e., scroll zoom updates the zoom value displayed in input
 
       map.addEventListener('mapviewchange', this.handleMapViewChange)
       // ------------------------------------------------------------
@@ -99,7 +83,6 @@ type: "mapviewchange"
       <>
         <div>Class Components</div>
         <div
-          //  style={{ width: '300px', height: '300px' }}
           style={{ position: 'relative', width: '100%', height: '300px' }}
           ref={this.ref}
         />

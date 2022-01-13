@@ -14,19 +14,15 @@ const Map = () => {
   const mapUseRef = useRef()
 
   const onMapViewChange = (zoom, lat, lng) => {
-    setState({
-      ...state,
-      lat,
-      lng,
-      zoom,
-    })
+    // timeout may not be needed, but keeping it for personal reasons 😁
+    setTimeout(() => {
+      setState({ ...state, zoom, lat, lng })
+    }, 100)
   }
 
   const handleMapViewChange = (ev) => {
-    console.log('event', ev)
     if (ev.newValue && ev.newValue.lookAt) {
       const lookAt = ev.newValue.lookAt
-      // adjust precision
       const lat = Math.trunc(lookAt.position.lat * 1e7) / 1e7
       const lng = Math.trunc(lookAt.position.lng * 1e7) / 1e7
       const zoom = Math.trunc(lookAt.zoom * 1e2) / 1e2
@@ -40,7 +36,6 @@ const Map = () => {
       [name]: value,
     })
   }
-  console.log('mapUseRef', mapUseRef.current)
 
   useEffect(() => {
     if (!map) {
@@ -66,25 +61,19 @@ const Map = () => {
         map.setZoom(state.zoom)
         map.setCenter({ lat: state.lat, lng: state.lng })
       }, 100)
-      //  map.addEventListener('mapviewchange', handleMapViewChange)
-    }
-  }, [map, state])
-
-  useEffect(() => {
-    if (map) {
-      new H.mapevents.Behavior(new H.mapevents.MapEvents(map))
-    }
-  }, [map])
-
-  useEffect(() => {
-    if (map && mapUseRef.current !== undefined) {
-      console.log('map? ')
       map.addEventListener('mapviewchange', handleMapViewChange)
       return () => {
         map.removeEventListener('mapviewchange', handleMapViewChange)
       }
     }
-  }, [map, mapUseRef])
+  }, [map])
+
+  useEffect(() => {
+    // interactive feature i.e. scroll zoom & pan
+    if (map) {
+      new H.mapevents.Behavior(new H.mapevents.MapEvents(map))
+    }
+  }, [map])
 
   return (
     <>

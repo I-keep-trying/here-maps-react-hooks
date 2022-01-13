@@ -3,7 +3,6 @@ import React from 'react'
 export default class MapPosition extends React.Component {
   handleOnChange = (ev) => {
     const { onChange } = this.props
-    // pass the values to the parent component
     onChange(ev.target.name, ev.target.value)
   }
 
